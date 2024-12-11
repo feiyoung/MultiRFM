@@ -58,7 +58,6 @@ for(i in 1:N){
   ## MSFA
   X_s <- lapply(XList, scale, scale=FALSE)
   hmu <- sapply(XList, colMeans)
-  #remotes::install_github("rdevito/MSFA", auth_token = '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')
   require(MSFA)
   start_value <- start_msfa(X_s =X_s, k = q, j_s = qs)
   try({
