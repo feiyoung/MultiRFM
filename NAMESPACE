@@ -1,3 +1,0 @@
-exportPattern("^[[:alpha:]]+")
-useDynLib(MultiRFM, .registration=TRUE)
-importFrom(Rcpp, evalCpp)
