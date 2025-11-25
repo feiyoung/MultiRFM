@@ -419,7 +419,7 @@ Rcpp::List rlfm_cpp(const Rcpp::List& XList, const arma::mat& bmu_int,
   field<mat> Xf(S),  Muf_f(S),  Muf_h(S), Bf(S);
   field<cube> Sf_f(S),  Sf_h(S); // each S_f_si is a diagonal matrix
   field<vec> af(S);
-  Rprintf("good starting!\n");
+  // Rprintf("good starting!\n");
   for(s=0; s < S; ++s){
     mat Xtmp1 = XList[s];
     Xf(s) = Xtmp1;
@@ -439,7 +439,7 @@ Rcpp::List rlfm_cpp(const Rcpp::List& XList, const arma::mat& bmu_int,
   double nu(nu_int);
 
   add_IC_Orth(A, Bf);
-  Rprintf("good starting2!\n");
+  //Rprintf("good starting2!\n");
   vec ELBO_vec(maxIter);
   ELBO_vec(0) = INT_MIN1;
   int iter;
@@ -450,10 +450,10 @@ Rcpp::List rlfm_cpp(const Rcpp::List& XList, const arma::mat& bmu_int,
     // Rprintf("Compute Phif!\n");
     Phif = phi_fun( Xf, bmu, A, LambdaMat, nu, Muf_f, Bf, Muf_h, Sf_f, Sf_h);
     // Phif(0).print();
-    Rprintf("Start Estep...");
+    //Rprintf("Start Estep...");
     // VB E-step
     VB_EstepVI( Xf, bmu, LambdaMat, A, Bf, Muf_f,Sf_f,Muf_h,Sf_h, nu, Phif);
-    Rprintf(", E step Finished!\n");
+    //Rprintf(", E step Finished!\n");
 
     //VB M-step
     // double elbo1 = calELBO(Xf, bmu, LambdaMat, A, Bf, Muf_f, Sf_f, Muf_h, Sf_h, nu);
