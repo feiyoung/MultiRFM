@@ -21,5 +21,12 @@ URL: https://github.com/feiyoung/MultiRFM
 BugReports: https://github.com/feiyoung/MultiRFM/issues
 Encoding: UTF-8
 LazyData: true
-LinkingTo: Rcpp, RcppArmadillo
+Suggests: 
+    knitr,
+    rmarkdown
+LinkingTo: 
+    Rcpp,
+    RcppArmadillo
+VignetteBuilder: 
+    knitr
 RoxygenNote: 7.3.2
