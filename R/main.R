@@ -5,7 +5,7 @@
 # pkgdown::build_site()
 # pkgdown::build_home()
 # pkgdown::build_reference()
-# pkgdown::build_article("COAPsimu")
+# pkgdown::build_article("simu_low_dim")
 # pkgdown::build_article("ProFASTdlpfc2")
 
 
@@ -19,6 +19,8 @@ Diag<-function (vec){
   }
   return(y)
 }
+
+
 
 approxPCA <- function(X, q){ ## speed the computation for initial values.
   n <- nrow(X)

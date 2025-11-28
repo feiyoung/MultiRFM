@@ -2,7 +2,7 @@ Package: MultiRFM
 Type: Package
 Title: High-Dimensional Multi-Study Robust Factor Model 
 Version: 1.1.0
-Date: 2025-11-24
+Date: 2025-11-28
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",
@@ -13,7 +13,7 @@ Authors@R:
              role = c("aut")))
 Author: Wei Liu [aut, cre], Xiaolu Jiang [aut]
 Maintainer: Wei Liu <liuweideng@gmail.com>
-Description: We introduce a high-dimensional multi-study robust factor model, called MultiRFM, which learns latent features and accounts for the heterogeneity among source. It could be used for analyzing heterogeneous RNA sequencing data. More details can be referred to Jiang et al. (2025) <doi:10.48550/arXiv.2506.18478>.
+Description: We introduce a high-dimensional multi-study robust factor model, which learns latent features and accounts for the heterogeneity among source. It could be used for analyzing heterogeneous RNA sequencing data. More details can be referred to Jiang et al. (2025) <doi:10.48550/arXiv.2506.18478>.
 License: GPL-3
 Depends: R (>= 3.5.0)
 Imports: MASS, irlba, LaplacesDemon, mixtools, mvtnorm, Rcpp (>= 1.0.8.3)

@@ -26,6 +26,13 @@ remotes::install_github("feiyoung/MultiRFM")
 
 ```
 
+## Usage
+For usage examples and guided walkthroughs, check the `vignettes` directory of the repo. 
+
+* [Low Dimensional Example](https://feiyoung.github.io/MultiRFM/articles/simu_low_dim.html)
+
+* [High Dimensional Example](https://feiyoung.github.io/MultiRFM/articles/simu_high_dim.html)
+
 
 ## Simulated codes
 For the codes in simulation study, check the `simuCodes` directory of the repo.
