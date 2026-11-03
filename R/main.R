@@ -26,7 +26,7 @@ approxPCA <- function(X, q){ ## speed the computation for initial values.
   n <- nrow(X)
   svdX  <- irlba(A =X, nv = q)
   PCs <- svdX$u * sqrt(n)
-  loadings <- svdX$v %*% diag(svdX$d[1:q]) /sqrt(n)
+  loadings <- svdX$v %*% Diag(svdX$d[1:q]) /sqrt(n)
   errMat <- X - PCs %*% t(loadings)
   return(list(PCs = PCs, loadings = loadings, errMat=errMat))
 }
@@ -41,11 +41,17 @@ mat2list <- function(z_int, nvec){
 
   zList_int <- list()
   istart <- 1
+  nc <- ncol(z_int)
   for(i in 1:length(nvec)){
-
-    zList_int[[i]] <- z_int[istart: sum(nvec[1:i]), ]
+    if(nc == 1){
+      z_tmp <- as.matrix(z_int[istart: sum(nvec[1:i]), ], ncol=1)
+    }else{
+      z_tmp <- z_int[istart: sum(nvec[1:i]), ]
+    }
+    zList_int[[i]] <- z_tmp
     istart <- istart + nvec[i]
   }
+
   return(zList_int)
 }
 dimrandomfun_norm <- function(q, n){
@@ -90,9 +96,13 @@ MultiRFM <- function (XList,  q = 15, qs = rep(2, length(XList)), epsELBO = 1e-0
   LambdaMat_int<- matrix(1, p, S); nu_int <- 5;
   Xmat <- scale(Reduce(rbind, XList), scale=FALSE);
   fit_pca <- approxPCA(Xmat, q)
-  A_int <- fit_pca$loadings
+  A_int <- as.matrix(fit_pca$loadings)
+  if (ncol(A_int) != q) A_int <- matrix(A_int, nrow = p, ncol = q)
   # SList_f_int <- lapply(nvec, function(x) matrix(1, x, q))
-  MuList_f_int <- mat2list(fit_pca$PCs, nvec)
+  PCs <- as.matrix(fit_pca$PCs)
+  if (ncol(PCs) != q) PCs <- matrix(PCs, ncol = q)
+  MuList_f_int <- mat2list(PCs, nvec)
+  rm(PCs)
 
   # SList_h_int <- lapply(1:S, function(s) matrix(1, nvec[s], qs[s]))
   SList_h_int <- SList_f_int <- list()
@@ -106,7 +116,9 @@ MultiRFM <- function (XList,  q = 15, qs = rep(2, length(XList)), epsELBO = 1e-0
   }
   set.seed(seed) # random initialization
   MuList_h_int <- lapply(1:S, function(s) matrix(rnorm(nvec[s]* qs[s]), nvec[s], qs[s]))
-  BList_int <- lapply(qs, dimrandomfun_norm, n=p)
+  BList_int <- lapply(qs, dimrandomfun_norm, n = p)
+  BList_int <- lapply(seq_along(qs), function(s)
+    matrix(BList_int[[s]], nrow = p, ncol = qs[s]))
   BList_int <- lapply(BList_int, normlize)
   tic <- proc.time()
   reslist <- rlfm_cpp(XList, bmu_int, A_int, BList_int, nu_int, LambdaMat_int,
@@ -154,6 +166,8 @@ selectFac.MultiRFM <- function(XList,  q_max = 15, qs_max = 4, method = c("SSVR"
                                threshold=1e-5, cup.upper=0.95,
                                epsELBO = 1e-05, maxIter = 30, verbose = TRUE, seed = 1){
 
+  if(q_max <= 1) stop("selectFac.MultiRFM: q_max must be greater than 1!")
+  if(min(qs_max)<=1)  stop("selectFac.MultiRFM: each component of qs_max must be greater than 1!")
   S <- length(XList)
   method <- match.arg(method)
   res <- MultiRFM(XList, q=q_max, qs= rep(qs_max,S), epsELBO = epsELBO, maxIter = maxIter, verbose = verbose,
@@ -179,7 +193,9 @@ stepwiseSelection <- function(loading, threshold= 1e-3,
       qq <- length(d_svdA)
       if(qq>1){
         rsigs <- d_svdA[-qq]/d_svdA[-1]
-        qlist$q <-  which.max(rsigs[-c(1:greater.than)]) + greater.than
+        if(greater.than >= length(rsigs)) greater.than <- length(rsigs) - 1
+        idx <- (greater.than+1): length(rsigs)
+        qlist$q <-  which.max(rsigs[idx]) + greater.than
       }else{
         qlist$q <- 1
       }
@@ -199,7 +215,9 @@ stepwiseSelection <- function(loading, threshold= 1e-3,
         qq1 <- length(d_svdB1)
         if(qq1>1){
           rsigB1 <- d_svdB1[-qq1]/d_svdB1[-1]
-          qvec[i] <-  which.max(rsigB1[-c(1:greater.than)]) + greater.than
+          if(greater.than >= length(rsigB1)) greater.than <- length(rsigB1) - 1
+          idx <- (greater.than+1): length(rsigB1)
+          qvec[i] <-  which.max(rsigB1[idx]) + greater.than
         }else{
           qvec[i] <-  1
         }

@@ -1,8 +1,8 @@
 Package: MultiRFM
 Type: Package
 Title: High-Dimensional Multi-Study Robust Factor Model 
-Version: 1.1.0
-Date: 2025-11-28
+Version: 1.2.0
+Date: 2026-11-03
 Authors@R: 
     c(person(given = "Wei",
              family = "Liu",

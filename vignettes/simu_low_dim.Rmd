@@ -20,7 +20,7 @@ This vignette introduces the usage of MultiRFM for the analysis of low-dimension
 
 
 The package can be loaded with the command, and define some metric functions:
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 library(MultiRFM)
 trace_statistic_fun <- function(H, H0){
 
@@ -41,7 +41,7 @@ trace_list_fun <- function(Hlist, H0list){
 
 ## Generate the simulated data
 First, we generate the simulated data with heavy tail, where the error term follows from a multivariate t-distribution with degree of freedom 3.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 nu <- 3 # nu is set to
 p <- 100
 nvec <- c(150,200);  q <- 3;qs <- c(2,2); S <- length(nvec)
@@ -51,7 +51,7 @@ datList <- gendata_simu_multi(seed=1, nvec=nvec, p=p, q=q, qs=qs, rho=c(5,5), er
 
 ```
 Fit the MultiRFM model using the function `MultiRFM()` in the R package `MultiRFM`. Users can use `?MultiRFM` to see the details about this function. For two matrices $\widehat D$ and $D$, we use trace statistic to measure their similarity.  The trace statistic  ranges from 0 to 1,  with higher values indicating better performance.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 methodNames <- c("MultiRFM", "MSFA-CAVI", "MSFA-SVI")
 metricMat <- matrix(NA, nrow=length(methodNames), ncol=5)
 colnames(metricMat) <- c('A_tr', 'B_tr',  'F_tr', 'H_tr', 'Time')
@@ -74,7 +74,7 @@ metricMat["MultiRFM",'H_tr'] <- trace_list_fun(res$H, datList$Hlist)
 We compare MultiRFM with two prominent methods: MSFA-CAVI and MSFA-SVI
 
 First, we implement MSFA-CAVI:
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 X_s <- lapply(XList, scale, scale=FALSE)
 hmu <- sapply(XList, colMeans)
 library(VIMSFA)
@@ -101,7 +101,7 @@ metricMat["MSFA-CAVI",'H_tr'] <- trace_list_fun(hH_cavi, datList$Hlist)
 ```
 
 Next, we implement MSFA-SVI:
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 print("MSFA-SVI")
 tic <- proc.time()
 svi_est <- svi_msfa(X_s, K=q, J_s=qs, verbose = 0)
@@ -127,7 +127,7 @@ metricMat["MSFA-SVI",'H_tr'] <- trace_list_fun(hH_cavi, datList$Hlist)
 ## Visualize the comparison of performance
 
 Next, we summarized the metrics for MultiRFM and other compared methods in a data.frame object.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 
 
 dat_metric <- data.frame(metricMat)
@@ -136,7 +136,7 @@ dat_metric$Method <- factor(row.names(dat_metric), levels=row.names(dat_metric))
 
 
 Plot the results for MultiRFM and other methods, which suggests that MultiRFM achieves better estimation accuracy for the study-shared loading matrix A, study-specified loading matrix B and factor matrix H.  MultiRFM significantly outperforms the compared methods in terms of estimation accuracy of B and H, as well as computational efficiency. 
-```{r  eval = TRUE, fig.width=13, fig.height=5}
+```{r  eval = FALSE, fig.width=13, fig.height=5}
 library(cowplot)
 library(ggplot2)
 p1 <- ggplot(data=subset(dat_metric, !is.na(A_tr)), aes(x= Method, y=A_tr, fill=Method)) + geom_bar(stat="identity") + xlab(NULL) + scale_x_discrete(breaks=NULL) + theme_bw(base_size = 16)
@@ -151,7 +151,7 @@ plot_grid(p1,p2,p3, p4,  p5, nrow=2, ncol=3)
 ## Select the parameters
 
 We applied the proposed 'CUP' method to select the number of factors. The results showed that  the CUP method has the potential to identify the true values.
-```{r  eval = TRUE}
+```{r  eval = FALSE}
 
 datList <- gendata_simu_multi(seed=1, nvec=nvec, p=p, q=q, qs=qs, rho=c(5,5), err.type='mvt', sigma2_eps =
                                 sigma2_eps, nu=3)
